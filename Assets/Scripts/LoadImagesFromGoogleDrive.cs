@@ -16,14 +16,26 @@ public class LoadImagesFromGoogleDrive : MonoBehaviour
     public GameObject spritePrefab; // Prefab with a SpriteRenderer component
 
     
+    public void GetShips()
+    {
+        Debug.Log($"Running GetShips with {shipFolderID}");
+        LoadAssetsFromFolder(shipFolderID);
+    }
 
-    public void LoadAssetsFromFolder(string folderId)
+    public void GetEnemies()
+    {
+        LoadAssetsFromFolder(enemyFolderID);
+    }
+
+    private void LoadAssetsFromFolder(string folderId)
     {
         StartCoroutine(GetImageList(folderId));
     }
 
     IEnumerator GetImageList(string folderId)
     {
+        Debug.Log($"Running GetImageList with {folderId}");
+
         string requestUrl = googleScriptUrl + "?folderId=" + folderId;
         UnityWebRequest request = UnityWebRequest.Get(requestUrl);
         yield return request.SendWebRequest();
@@ -44,6 +56,8 @@ public class LoadImagesFromGoogleDrive : MonoBehaviour
 
     IEnumerator DownloadAndCreateSprite(string url)
     {
+        Debug.Log($"Running DownloadAndCreateSprite with {url}");
+
         UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
         yield return request.SendWebRequest();
 
