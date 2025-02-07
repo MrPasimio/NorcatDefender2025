@@ -1,3 +1,6 @@
+
+
+
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
@@ -5,38 +8,18 @@ using System.Collections.Generic;
 
 public class LoadImagesFromGoogleDrive : MonoBehaviour
 {
-    [Header("Links and IDs")]
-    [SerializeField] private  string googleScriptUrl = "https://script.google.com/macros/s/AKfycbxvIZaHZyxL8GqVxYkE6ToYqhm-2KppUwUtwoSESnuErHx5W4HzIFqwS039LHsWv7MVEQ/exec";
-    [SerializeField] private string shipFolderID = "1-zJoINpSafwN40ZPTs8pBeL2MscQd3Zb";
-    [SerializeField] private string enemyFolderID= "1Ghz_vFdYl9BbeX9LG18Xo_9HlyHohruA";
+    [SerializeField] private string googleScriptUrl = "https://script.google.com/macros/s/AKfycbxvIZaHZyxL8GqVxYkE6ToYqhm-2KppUwUtwoSESnuErHx5W4HzIFqwS039LHsWv7MVEQ/exec";
 
 
-
-    public Transform imageContainer; // Parent object for sprites
-    public GameObject spritePrefab; // Prefab with a SpriteRenderer component
-
-    
-    public void GetShips()
+    // Public method to load sprites from a specified folder into a provided list
+    public void LoadAssetsFromFolder(string folderId, List<Sprite> destinationList)
     {
-        Debug.Log($"Running GetShips with {shipFolderID}");
-        LoadAssetsFromFolder(shipFolderID);
+        StartCoroutine(GetImageList(folderId, destinationList));
     }
 
-    public void GetEnemies()
+    private IEnumerator GetImageList(string folderId, List<Sprite> destinationList)
     {
-        LoadAssetsFromFolder(enemyFolderID);
-    }
-
-    private void LoadAssetsFromFolder(string folderId)
-    {
-        StartCoroutine(GetImageList(folderId));
-    }
-
-    IEnumerator GetImageList(string folderId)
-    {
-        Debug.Log($"Running GetImageList with {folderId}");
-
-        string requestUrl = googleScriptUrl + "?folderId=" + folderId;
+        string requestUrl = $"{googleScriptUrl}?folderId={folderId}";
         UnityWebRequest request = UnityWebRequest.Get(requestUrl);
         yield return request.SendWebRequest();
 
@@ -45,7 +28,7 @@ public class LoadImagesFromGoogleDrive : MonoBehaviour
             List<GoogleDriveFile> files = JsonUtility.FromJson<FileListWrapper>("{\"files\":" + request.downloadHandler.text + "}").files;
             foreach (GoogleDriveFile file in files)
             {
-                StartCoroutine(DownloadAndCreateSprite(file.url));
+                yield return StartCoroutine(DownloadAndStoreSprite(file.url, destinationList));
             }
         }
         else
@@ -54,20 +37,16 @@ public class LoadImagesFromGoogleDrive : MonoBehaviour
         }
     }
 
-    IEnumerator DownloadAndCreateSprite(string url)
+    private IEnumerator DownloadAndStoreSprite(string url, List<Sprite> destinationList)
     {
-        Debug.Log($"Running DownloadAndCreateSprite with {url}");
-
         UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success)
         {
-            Texture2D texture = ((DownloadHandlerTexture)request.downloadHandler).texture;
+            Texture2D texture = DownloadHandlerTexture.GetContent(request);
             Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-
-            GameObject newSpriteObj = Instantiate(spritePrefab, imageContainer);
-            newSpriteObj.GetComponent<SpriteRenderer>().sprite = sprite;
+            destinationList.Add(sprite);
         }
         else
         {
@@ -76,16 +55,17 @@ public class LoadImagesFromGoogleDrive : MonoBehaviour
     }
 
     [System.Serializable]
-    public class GoogleDriveFile
+    private class GoogleDriveFile
     {
         public string name;
         public string url;
     }
 
     [System.Serializable]
-    public class FileListWrapper
+    private class FileListWrapper
     {
         public List<GoogleDriveFile> files;
     }
 }
+
 

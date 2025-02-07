@@ -320,6 +320,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   assetLoader: {fileID: 2072699475}
+  testSpriteRenderer: {fileID: 44760307}
+  shipIndex: 0
 --- !u!4 &523563895
 Transform:
   m_ObjectHideFlags: 0
@@ -365,10 +367,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   googleScriptUrl: https://script.google.com/macros/s/AKfycbxvIZaHZyxL8GqVxYkE6ToYqhm-2KppUwUtwoSESnuErHx5W4HzIFqwS039LHsWv7MVEQ/exec
-  shipFolderID: 1-zJoINpSafwN40ZPTs8pBeL2MscQd3Zb
-  enemyFolderID: 1Ghz_vFdYl9BbeX9LG18Xo_9HlyHohruA
-  imageContainer: {fileID: 44760308}
-  spritePrefab: {fileID: 44760306}
 --- !u!4 &2072699476
 Transform:
   m_ObjectHideFlags: 0
