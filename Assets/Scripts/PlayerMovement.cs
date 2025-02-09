@@ -6,6 +6,10 @@ public class PlayerMovement : MonoBehaviour
 {
     public bool isMoving = false;
     public float limit;
+    public GameObject projectilePrefab;
+    public Transform projectileSpawnPoint;
+    public bool canShoot = true;
+    public float shootDelay;
 
 
     // Start is called before the first frame update
@@ -31,6 +35,11 @@ public class PlayerMovement : MonoBehaviour
                 transform.position = new Vector3(limit, transform.position.y, transform.position.z);
             }
         }
+
+        if(canShoot)
+        {
+            StartCoroutine(Shoot());
+        }
     }
 
     private void OnMouseDown()
@@ -41,5 +50,13 @@ public class PlayerMovement : MonoBehaviour
     private void OnMouseUp()
     {
         isMoving = false;
+    }
+
+    IEnumerator Shoot()
+    {
+        canShoot = false;
+        Instantiate(projectilePrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation);
+        yield return new WaitForSeconds(shootDelay);
+        canShoot = true;
     }
 }
