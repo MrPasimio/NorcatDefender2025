@@ -9,11 +9,14 @@ using System.Collections.Generic;
 public class LoadImagesFromGoogleDrive : MonoBehaviour
 {
     [SerializeField] private string googleScriptUrl = "https://script.google.com/macros/s/AKfycbxvIZaHZyxL8GqVxYkE6ToYqhm-2KppUwUtwoSESnuErHx5W4HzIFqwS039LHsWv7MVEQ/exec";
+    
 
 
     // Public method to load sprites from a specified folder into a provided list
     public void LoadAssetsFromFolder(string folderId, List<Sprite> destinationList)
     {
+        Debug.Log($"Loading Assets from {folderId}");
+
         StartCoroutine(GetImageList(folderId, destinationList));
     }
 
@@ -28,8 +31,10 @@ public class LoadImagesFromGoogleDrive : MonoBehaviour
             List<GoogleDriveFile> files = JsonUtility.FromJson<FileListWrapper>("{\"files\":" + request.downloadHandler.text + "}").files;
             foreach (GoogleDriveFile file in files)
             {
+                Debug.Log($"Google Drive file found: {file.name}");
                 yield return StartCoroutine(DownloadAndStoreSprite(file.url, destinationList));
             }
+            Storage.isLoading = false;
         }
         else
         {
