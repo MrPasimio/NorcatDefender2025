@@ -22,4 +22,13 @@ public static class Storage
         GameObject.Find("AssetLoader").GetComponent<LoadImagesFromGoogleDrive>().LoadAssetsFromFolder(shipFolderID, shipSprites);
         Debug.Log($"{shipSprites.Count} ships loaded");
     }
+
+    public static void populateEnemies()
+    {
+        Debug.Log("Populating Enemies");
+        isLoading = true;
+        enemySprites.Clear();
+        GameObject.Find("EnemyAssetLoader").GetComponent<LoadImagesFromGoogleDrive>().LoadAssetsFromFolder(enemyFolderID, enemySprites);
+        Debug.Log($"{enemySprites.Count} enemies");
+    }
 }
