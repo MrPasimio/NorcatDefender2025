@@ -33,7 +33,7 @@ public class Enemy : MonoBehaviour
 
     public void GameOver()
     {
-       
+       StartCoroutine(gm.GameOver());
         Debug.Log("Game Over");
     }
 }

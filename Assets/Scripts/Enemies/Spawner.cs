@@ -8,6 +8,7 @@ public class Spawner : MonoBehaviour
     public float zPos;
     public float xRange;
     public float spawnDelay;
+    public float spawnSpeed = 2;
     public GameObject enemyPrefab;
 
     // Start is called before the first frame update
@@ -18,7 +19,7 @@ public class Spawner : MonoBehaviour
 
   IEnumerator SpawnEnemy()
     {
-        Instantiate(
+        GameObject currentEnemy = Instantiate(
             enemyPrefab,
             new Vector3(
                         Random.Range(-xRange, xRange),
@@ -26,6 +27,7 @@ public class Spawner : MonoBehaviour
                         zPos),
             enemyPrefab.transform.rotation)
             ;
+        currentEnemy.GetComponent<MoveDown>().speed = spawnSpeed;
         yield return new WaitForSeconds(spawnDelay);
         StartCoroutine(SpawnEnemy());
     }
