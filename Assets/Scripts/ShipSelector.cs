@@ -66,7 +66,14 @@ public class ShipSelector : MonoBehaviour
 
     public void UpdateShipDisplay()
     {
-        shipDisplay.sprite = shipSprites[shipIndex];
+        if (shipSprites.Count > 0)
+        {
+            shipDisplay.sprite = shipSprites[shipIndex];
+        }
+        else
+        {
+            Debug.Log("Ship array empty");
+        }
     }
 
     public void NextShip()

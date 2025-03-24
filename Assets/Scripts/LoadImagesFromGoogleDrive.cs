@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 public class LoadImagesFromGoogleDrive : MonoBehaviour
 {
-    [SerializeField] private string googleScriptUrl = "https://script.google.com/macros/s/AKfycbxvIZaHZyxL8GqVxYkE6ToYqhm-2KppUwUtwoSESnuErHx5W4HzIFqwS039LHsWv7MVEQ/exec";
+    [SerializeField] private string googleScriptUrl = "https://script.google.com/macros/s/AKfycbzBVpXU2AdXpD98xO2DPTjxUa3-Owl_n6d30QbJUX_EBrOieBvHhGxLXYYi8NFDqZuNMw/exec";
     
 
 
@@ -46,6 +46,8 @@ public class LoadImagesFromGoogleDrive : MonoBehaviour
     {
         UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
         yield return request.SendWebRequest();
+
+        Debug.Log("Content-Type: " + request.GetResponseHeader("Content-Type")); 
 
         if (request.result == UnityWebRequest.Result.Success)
         {
